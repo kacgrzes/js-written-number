@@ -49,7 +49,17 @@
     },
     {
       "singular": "tysiąc",
-      "plural": "tysiący",
+      "plural": "tysięcy",
+      "pluralExceptions": [
+        {
+          "numbers": [12,13,14],
+          "exception": "tysięcy"
+        },
+        {
+          "numbers": [2,3,4],
+          "exception": "tysiące"
+        }
+      ],
       "avoidPrefixException": [1]
     },
     {

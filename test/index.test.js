@@ -40,6 +40,13 @@ describe('written-number', function() {
     it('correctly converts numbers > 1000', function() {
       writtenNumber(1000).should.equal('tysiąc');
       writtenNumber(2000).should.equal('dwa tysiące');
+      writtenNumber(3000).should.equal('trzy tysiące');
+      writtenNumber(3042).should.equal('trzy tysiące czterdzieści dwa');
+      writtenNumber(3142).should.equal('trzy tysiące sto czterdzieści dwa');
+      writtenNumber(3242).should.equal('trzy tysiące dwieście czterdzieści dwa');
+      writtenNumber(13242).should.equal('trzynaście tysięcy dwieście czterdzieści dwa');
+      writtenNumber(23242).should.equal('dwadzieścia trzy tysięce dwieście czterdzieści dwa');
+      writtenNumber(123242).should.equal('sto dwadzieścia trzy tysięce dwieście czterdzieści dwa');
     });
 
   });
