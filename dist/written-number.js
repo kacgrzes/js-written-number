@@ -315,6 +315,111 @@ module.exports={
 },{}],4:[function(require,module,exports){
 module.exports={
   "useLongScale": false,
+  "baseSeparator": " ",
+  "unitSeparator": "",
+  "base": {
+    "0": "zero",
+    "1": "jeden",
+    "2": "dwa",
+    "3": "trzy",
+    "4": "cztery",
+    "5": "pięć",
+    "6": "sześć",
+    "7": "siedem",
+    "8": "osiem",
+    "9": "dziewięć",
+    "10": "dziesięć",
+    "11": "jedenaście",
+    "12": "dwanaście",
+    "13": "trzynaście",
+    "14": "czternaście",
+    "15": "piętnaście",
+    "16": "szesnaście",
+    "17": "siedemnaście",
+    "18": "osiemnaście",
+    "19": "dziewiętnaście",
+    "20": "dwadzieścia",
+    "30": "trzydzieści",
+    "40": "czterdzieści",
+    "50": "pięćdziesiat",
+    "60": "sześćdziesiąt",
+    "70": "siedemdziesiąt",
+    "80": "osiemdziesiąt",
+    "90": "dziewięćdziesiąt",
+    "100": "sto",
+    "200": "dwieście",
+    "300": "trzysta",
+    "400": "czterysta",
+    "500": "pięćset",
+    "600": "sześćset",
+    "700": "siedemset",
+    "800": "osiemset",
+    "900": "dziewięćset"
+  },
+  "units" : [
+    {
+      "singular": "sto",
+      "useBaseInstead": true,
+      "useBaseException": [1]
+    },
+    {
+      "singular": "tysiąc",
+      "plural": "tysięcy",
+      "pluralExceptions": [
+        {
+          "numbers": [12,13,14],
+          "exception": "tysięcy"
+        },
+        {
+          "numbers": [2,3,4],
+          "exception": "tysiące"
+        }
+      ],
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "milion",
+      "plural": "milionów",
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "miliard",
+      "plural": "miliardów",
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "bilion",
+      "plural": "bilionów",
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "billiard",
+      "plural": "biliardów",
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "trilion",
+      "plural": "trilionów",
+      "avoidPrefixException": [1]
+    },
+    {
+      "singular": "triliard",
+      "plural": "triliardów",
+      "avoidPrefixException": [1]
+    }
+  ],
+  "unitExceptions": {
+    "200": "dwieście",
+    "300": "trzysta",
+    "400": "czterysta",
+    "2000": "dwa tysiące",
+    "3000": "trzy tysiące",
+    "4000": "cztery tysiące"
+  }
+}
+},{}],5:[function(require,module,exports){
+module.exports={
+  "useLongScale": false,
   "baseSeparator": " e ",
   "unitSeparator": "e ",
   "base": {
@@ -430,17 +535,18 @@ module.exports={
   ]
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
-exports = module.exports = writtenNumber;
+var exports = module.exports = writtenNumber;
 var util = require('./util');
 
-var languages = ['en', 'es', 'pt', 'fr'];
+var languages = ['en', 'es', 'pt', 'fr', 'pl'];
 var i18n = {
   en: require('./i18n/en.json'),
   es: require('./i18n/es.json'),
   pt: require('./i18n/pt.json'),
   fr: require('./i18n/fr.json'),
+  pl: require('./i18n/pl.json')
 };
 exports.i18n = i18n;
 
@@ -456,7 +562,7 @@ for (i = 1; i <= 15; i++) {
 
 writtenNumber.defaults = {
   noAnd: false,
-  lang: 'en',
+  lang: 'pl'
 };
 
 /**
@@ -524,7 +630,23 @@ function writtenNumber(n, options) {
         str = unit;
       }
       else {
-        str = r > 1 && unit.plural && (!unit.avoidInNumberPlural || !m) ? unit.plural : unit.singular;
+        
+        //TODO: refactor needed
+        if(r > 1 && unit.plural && (!unit.avoidInNumberPlural || !m)) {
+          //str =  || unit.plural;
+          if (r === 12 || r === 13 || r === 14) {
+            str = unit.pluralExceptions[0].exception;
+          }
+          else if(r % 10 === 2 || r % 10 === 3 || r % 10 === 4){
+            str = unit.pluralExceptions[1].exception;
+          }
+          else {
+            str = unit.plural;
+          }
+        }
+        else {
+          str = unit.singular;
+        }
       }
       if(unit.avoidPrefixException && unit.avoidPrefixException.indexOf(r) > -1) {
         ret.push(str);
@@ -554,7 +676,25 @@ function handleSmallerThan100(n, language, unit, baseCardinals, options) {
   return baseCardinals[dec];
 }
 
-},{"./i18n/en.json":1,"./i18n/es.json":2,"./i18n/fr.json":3,"./i18n/pt.json":4,"./util":6}],6:[function(require,module,exports){
+//TODO: refactor needed
+function handlePolishPlurals(r, language, unit) {
+  if(language === 'pl') {
+    if(hasException(r, 0, unit)){
+      return unit.pluralExceptions[0].exception;
+    } else if(hasException(r, 1, unit)){
+      return unit.pluralExceptions[1].exception;
+    }
+  }
+}
+
+function hasException(r, i, unit) {
+  i = i || 0;
+  return unit.pluralExceptions[i].numbers.some(function (n) {
+    return n = r;
+  })
+}
+
+},{"./i18n/en.json":1,"./i18n/es.json":2,"./i18n/fr.json":3,"./i18n/pl.json":4,"./i18n/pt.json":5,"./util":7}],7:[function(require,module,exports){
 'use strict';
 /**
  * Merges a set of default keys with a target object
@@ -577,5 +717,5 @@ function defaults(target, defs) {
 }
 exports.defaults = defaults;
 
-},{}]},{},[5])(5)
+},{}]},{},[6])(6)
 });
