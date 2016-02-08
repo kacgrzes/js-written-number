@@ -108,8 +108,8 @@ describe('written-number', function() {
       writtenNumber(3142).should.equal('trzy tysiące sto czterdzieści dwa');
       writtenNumber(3242).should.equal('trzy tysiące dwieście czterdzieści dwa');
       writtenNumber(13242).should.equal('trzynaście tysięcy dwieście czterdzieści dwa');
-      writtenNumber(23242).should.equal('dwadzieścia trzy tysięce dwieście czterdzieści dwa');
-      writtenNumber(123242).should.equal('sto dwadzieścia trzy tysięce dwieście czterdzieści dwa');
+      writtenNumber(23242).should.equal('dwadzieścia trzy tysiące dwieście czterdzieści dwa');
+      writtenNumber(123242).should.equal('sto dwadzieścia trzy tysiące dwieście czterdzieści dwa');
     });
 
   });
